@@ -1,6 +1,9 @@
 <template>
   <v-app class="app">
-    <AppAlert />
+
+    <ToolBar v-if="showToolbar" />
+        <AppAlert />
+
 
     <v-main>
       <router-view />
@@ -9,20 +12,26 @@
 </template>
 
 <script>
+import ToolBar from '@/components/common/ToolBar.vue'
 import AppAlert from '@/components/common/AppAlert.vue'
 
 export default {
   name: 'App',
 
   components: {
+    ToolBar,
     AppAlert
+  },
+
+  computed: {
+    showToolbar() {
+      return !['login', 'register'].includes(this.$route.name)
+    }
   }
 }
 </script>
-
 <style>
 .app {
   background: #eeeeee !important;
 }
 </style>
-
