@@ -31,31 +31,31 @@ const routes = [
     name: 'register',
     component: () => import('../views/auth/RegisterView.vue')
   },
-  {
-    path: '/admin',
-    name: 'admin',
-    component: () => import('../views/admin/AdminView.vue'),
-    meta: {
-      requiresAuth: true,
-      requiresAdmin: true
-    }
-  },
-  {
-    path: '/orders',
-    name: 'orders',
-    component: () => import('../views/orders/OrdersView.vue'),
-    meta: {
-      requiresAuth: true
-    }
-  },
-  {
-    path: '/products',
-    name: 'products',
-    component: () => import('../views/product/ProductView.vue'),
-    meta: {
-      requiresAuth: true
-    }
-  }
+      {
+        path: '/admin',
+        name: 'admin',
+        component: () => import('../views/admin/AdminView.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true
+        }
+      },
+      {
+        path: '/orders',
+        name: 'orders',
+        component: () => import('../views/orders/OrdersView.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: '/products',
+        name: 'products',
+        component: () => import('../views/product/ProductView.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      }
 ]
 
 const router = new VueRouter({
