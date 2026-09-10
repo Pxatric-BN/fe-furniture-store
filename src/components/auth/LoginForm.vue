@@ -103,8 +103,10 @@ export default {
           }
         )
 
-        const { token } = response.data.data
+        const { token, role } = response.data.data
+        
         localStorage.setItem('token', token)
+        localStorage.setItem('role', role)
       
         eventBus.$emit('show-alert', { type: 'success', message: response.data.message })
 

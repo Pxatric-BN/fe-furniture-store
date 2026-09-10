@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { isAuthenticated, getRole } from '@/utils/auth'
+
 
 Vue.use(VueRouter)
 
@@ -23,6 +25,31 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () => import('../views/auth/LoginView.vue')
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: () => import('../views/admin/AdminView.vue'),
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true
+    }
+  },
+  {
+    path: '/orders',
+    name: 'orders',
+    component: () => import('../views/orders/OrdersView.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/products',
+    name: 'products',
+    component: () => import('../views/product/ProductView.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 
@@ -30,6 +57,18 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !isAuthenticated()) {
+    return next('/login')
+  }
+
+  if (to.meta.requiresAdmin && getRole() !== 'admin') {
+    return next('/products')
+  }
+
+  next()
 })
 
 export default router
