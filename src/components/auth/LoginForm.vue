@@ -110,7 +110,7 @@ export default {
       
         eventBus.$emit('show-alert', { type: 'success', message: response.data.message })
 
-        this.$router.push('/')
+        this.$router.push('/products')
       } catch (error) {
 
         eventBus.$emit('show-alert', { 
