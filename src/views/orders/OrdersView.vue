@@ -33,7 +33,6 @@
 
       <v-divider />
 
-      <!-- Products -->
       <div class="products-section">
         <h3>Products</h3>
 
@@ -64,7 +63,7 @@
 
       <v-divider />
 
-      <!-- Total -->
+
       <div class="total-section">
         <span>Total</span>
 

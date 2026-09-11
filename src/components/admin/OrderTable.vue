@@ -1,5 +1,11 @@
 <template>
   <div class="admin-orders">
+    
+      <div>
+        <h1>Order</h1>
+        <p>See all Order Here!!!</p>
+      </div>
+    
     <v-card
       flat
       class="orders-card"

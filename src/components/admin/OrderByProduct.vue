@@ -124,7 +124,7 @@
               </template>
 
               <template v-slot:[`item.price`]="{ item }">
-                {{ getPrice(item).toLocaleString() }} ฿
+                {{ (getQuantity(item) * getPrice(item)).toLocaleString() }} ฿
               </template>
 
               <template v-slot:[`item.createdAt`]="{ item }">
@@ -159,6 +159,10 @@
 </template>
 
 <script>
+
+import eventBus from '@/utils/eventBus'
+
+
 export default {
   name: 'AdminProductsByOrder',
 
@@ -228,7 +232,6 @@ export default {
 
     async getProductOrders (productId) {
       try {
-        this.loading = true
 
         this.orders = []
 
@@ -236,14 +239,15 @@ export default {
           `http://127.0.0.1:3000/api/v1/products/${productId}/orders`
         )
 
-        console.log('Product Orders:', response.data)
-
         this.orders = response.data.data
+        eventBus.$emit('show-alert', { type: 'success', message: response.data.message })
+
       } catch (error) {
-        console.error('Get product orders error:', error)
-      } finally {
-        this.loading = false
-      }
+        eventBus.$emit('show-alert', { 
+            type: 'error', 
+            message: error.response?.data?.message || 'Something went wrong' 
+          })
+      } 
     },
     getQuantity (order) {
       if (!order.products) {

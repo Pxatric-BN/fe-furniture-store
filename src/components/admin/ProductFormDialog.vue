@@ -85,6 +85,8 @@
 </template>
 
 <script>
+import eventBus from '@/utils/eventBus'
+
 export default {
   name: 'ProductFormDialog',
 
@@ -178,7 +180,7 @@ export default {
         const token = localStorage.getItem('token')
         if (this.isEdit) {
          
-          await this.axios.put(
+          const response = await this.axios.put(
             `http://localhost:3000/api/v1/products/${this.product._id}`,
             this.form,
             {
@@ -187,9 +189,10 @@ export default {
             }
           }
           )
+          eventBus.$emit('show-alert', { type: 'success', message: response.data.message })
         } else {
           
-          await this.axios.post(
+          const response = await this.axios.post(
             'http://localhost:3000/api/v1/products',
             this.form,
             {
@@ -198,12 +201,16 @@ export default {
               }
             }
           )
+          eventBus.$emit('show-alert', { type: 'success', message: response.data.message })
         }
 
         this.$emit('saved')
         this.$emit('input', false)
       } catch (error) {
-        console.log(error)
+        eventBus.$emit('show-alert', { 
+            type: 'error', 
+            message: error.response?.data?.message || 'Something went wrong' 
+          })
       } finally {
         this.loading = false
       }
