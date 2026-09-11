@@ -73,7 +73,7 @@
            
             <td>
               <span class="product-price">
-                ฿{{ product.product_price }}
+                ฿{{ product.product_price.toLocaleString() }}
               </span>
             </td>
 

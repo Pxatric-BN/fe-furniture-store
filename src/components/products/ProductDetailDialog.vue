@@ -23,7 +23,7 @@
           </v-list-item-subtitle>
 
           <div class="price">
-            ฿{{ product.product_price }}
+            ฿{{ product.product_price.toLocaleString() }}
             <v-chip
               class="stock-chip"
               :color="product.product_stock > 0 ? 'indigo darken-3' : 'red'"
