@@ -23,9 +23,7 @@ export const getUserFromToken = () => {
 }
 
 export const getRole = () => {
-  const user = getUserFromToken()
-
-  return user ? user.role : null
+  return localStorage.getItem('role')
 }
 
 export const logout = () => {
