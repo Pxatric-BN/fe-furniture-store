@@ -147,7 +147,7 @@ export default {
 
     addToOrder () {
       this.$emit('add-to-order', {
-        product: this.product,
+        productId: this.product._id, 
         quantity: this.quantity
       })
     },

@@ -77,14 +77,12 @@
 </template>
 
 <script>
-
 import ProductDetailDialog from './ProductDetailDialog.vue'
 
 export default {
   name: 'ProductCard',
 
   components: {
-    
     ProductDetailDialog
   },
 
@@ -118,13 +116,37 @@ export default {
       this.detailDialog = true
     },
 
-    addToCart (product) {
-      this.$emit('add-to-cart', product)
-    },
+    async handleAddToOrder ({ productId, quantity }) {
+      try {
+        const token = localStorage.getItem('token')
 
-    handleAddToOrder (data) {
-      console.log('Product:', data.product)
-      console.log('Quantity:', data.quantity)
+        const response = await this.axios.post(
+          `http://localhost:3000/api/v1/products/${productId}/orders`,
+          {
+            quantity: quantity
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+
+        const order = response.data.data
+
+        console.log('Order created:', order)
+
+       
+        localStorage.setItem(
+          'currentOrder',
+          JSON.stringify(order)
+        )
+        this.detailDialog = false
+
+        this.$router.push('/orders')
+      } catch (error) {
+        console.error('Create order failed:', error)
+      }
     }
   }
 }
@@ -163,7 +185,6 @@ export default {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-
   line-height: 1.5;
   max-width: 220px;
 }
