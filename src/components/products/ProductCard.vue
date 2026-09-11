@@ -1,72 +1,68 @@
 <template>
   <div>
-    <v-row class="mt-4" dense>
+    <v-row class="product-grid">
       <v-col
         v-for="product in products"
         :key="product._id"
         cols="3"
-        class="d-flex"
       >
         <v-card
           class="product-card"
-          outlined
+          flat
+          @click="openProductDetail(product._id)"
         >
-          <v-list-item three-line>
-            <v-list-item-content>
-              <div class="text-overline mb-2">
-                FURNITURE
-              </div>
+          <div class="product-image-wrapper">
+            <img
+              :src="product.product_image"
+              :alt="product.product_name"
+              class="product-image"
+            />
 
-              <v-list-item-title class="product-name mb-2">
-                {{ product.product_name }}
-              </v-list-item-title>
+            <div class="category-badge">
+              FURNITURE
+            </div>
+          </div>
 
-              <v-list-item-subtitle class="product-description">
-                {{ product.product_description }}
-              </v-list-item-subtitle>
+          <div class="product-content">
+            <div class="product-name">
+              {{ product.product_name }}
+            </div>
 
-              <div class="product-price">
-                ฿{{ product.product_price }}
-              </div>
-            </v-list-item-content>
-
-            <v-list-item-avatar
-              tile
-              size="100"
-              class="product-avatar"
-            >
-              <img
-                :src="product.product_image"
-                :alt="product.product_name"
-              >
-            </v-list-item-avatar>
-          </v-list-item>
-
-          <v-card-actions>
-            <v-btn
+            <div class="product-description">
+              {{ product.product_description }}
+            </div>
+           <v-chip
+              class="stock-chip"
+              :color="product.product_stock > 0 ? 'indigo darken-3' : 'red'"
               outlined
-              rounded
-              text
-              class="detail-btn"
-              @click="openProductDetail(product._id)"
+              small
             >
-              MORE DETAIL
+              {{ product.product_stock > 0 ? 'In Stock' : 'Out of Stock' }}
+              <span v-if="product.product_stock > 0" class="ml-1">
+                {{ product.product_stock }}
+              </span>
+            </v-chip>
+   
+            <div class="product-footer">
+              <div class="product-price">
+                ฿{{ product.product_price.toLocaleString('th-TH') }}
+              </div>
 
-              <v-icon
-                right
-                size="18"
+              <v-btn
+                icon
+                class="arrow-btn"
+                @click.stop="openProductDetail(product._id)"
               >
-                mdi-arrow-right
-              </v-icon>
-            </v-btn>
-
-            <v-spacer />
-          </v-card-actions>
+                <v-icon size="20">
+                  mdi-arrow-right
+                </v-icon>
+              </v-btn>
+            </div>
+          </div>
         </v-card>
       </v-col>
     </v-row>
 
-    <!-- Product Detail -->
     <ProductDetailDialog
       :product-id="selectedProductId"
       :value="detailDialog"
@@ -78,6 +74,8 @@
 
 <script>
 import ProductDetailDialog from './ProductDetailDialog.vue'
+import eventBus from '@/utils/eventBus'
+
 
 export default {
   name: 'ProductCard',
@@ -108,6 +106,10 @@ export default {
         this.products = response.data.data
       } catch (error) {
         console.error('Get products failed:', error)
+        eventBus.$emit('show-alert', { 
+            type: 'error', 
+            message: error.response?.data?.message || 'Something went wrong' 
+          })
       }
     },
 
@@ -136,16 +138,21 @@ export default {
 
         console.log('Order created:', order)
 
-       
         localStorage.setItem(
           'currentOrder',
           JSON.stringify(order)
         )
+
         this.detailDialog = false
 
         this.$router.push('/orders')
+        eventBus.$emit('show-alert', { type: 'success', message: response.data.message })
+
       } catch (error) {
-        console.error('Create order failed:', error)
+         eventBus.$emit('show-alert', { 
+            type: 'error', 
+            message: error.response?.data?.message || 'Something went wrong' 
+          })
       }
     }
   }
@@ -153,56 +160,108 @@ export default {
 </script>
 
 <style scoped>
+.product-grid {
+  margin-top: 16px;
+}
+
 .product-card {
-  width: 100%;
-  border-radius: 18px;
+  height: 100%;
   overflow: hidden;
-  transition: 0.25s ease;
+  border: 1px solid #eeeeee;
+  border-radius: 20px;
+  background: #ffffff;
+  cursor: pointer;
 }
 
 .product-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-6px);
+  border-color: #dddddd;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.10) !important;
 }
 
-.product-avatar {
-  border-radius: 12px !important;
+.product-image-wrapper {
+  position: relative;
+  height: 230px;
   overflow: hidden;
+  background: #f5f5f5;
 }
 
-.product-avatar img {
+.product-image {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.category-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #222;
+}
+
+.product-content {
+  padding: 18px;
 }
 
 .product-name {
   font-size: 18px;
   font-weight: 700;
+  line-height: 1.35;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-description {
+  margin-top: 8px;
+  height: 42px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #777;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-height: 1.5;
-  max-width: 220px;
+}
+
+.product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 18px;
 }
 
 .product-price {
+  font-size: 20px;
+  font-weight: 800;
+
+  color: #111;
+}
+
+.arrow-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #eeeeee;
+  border-radius: 50%;
+  background: #ffffff !important;
+  transition: 0.2s ease;
+}
+
+.stock-chip {
+  margin-left: auto;
   margin-top: 12px;
-  font-size: 18px;
-  font-weight: 700;
 }
 
-.v-card-actions {
-  padding: 12px 16px 16px;
-}
 
-.detail-btn {
-  text-transform: none;
-  font-weight: 600;
-  border-color: #000 !important;
-  color: #000 !important;
-}
 </style>
+

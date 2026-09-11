@@ -24,9 +24,23 @@
 
           <div class="price">
             ฿{{ product.product_price }}
+            <v-chip
+              class="stock-chip"
+              :color="product.product_stock > 0 ? 'indigo darken-3' : 'red'"
+              outlined
+              small
+            >
+              {{ product.product_stock > 0 ? 'In Stock' : 'Out of Stock' }}
+              <span v-if="product.product_stock > 0" class="ml-1">
+                {{ product.product_stock }}
+              </span>
+            </v-chip>
+          </div>
+          <div>
+            
           </div>
         </v-list-item-content>
-
+        
         <v-list-item-avatar
           tile
           size="180"
@@ -91,6 +105,8 @@
 </template>
 
 <script>
+import eventBus from '@/utils/eventBus'
+  
 export default {
   name: 'ProductDetailDialog',
 
@@ -130,8 +146,12 @@ export default {
 
         this.product = response.data.data
         this.quantity = 1
+        
       } catch (error) {
-        console.error('Get product failed:', error)
+         eventBus.$emit('show-alert', { 
+            type: 'error', 
+            message: error.response?.data?.message || 'Something went wrong' 
+          })
       }
     },
 
@@ -213,4 +233,5 @@ export default {
   text-align: center;
   font-weight: 600;
 }
+
 </style>

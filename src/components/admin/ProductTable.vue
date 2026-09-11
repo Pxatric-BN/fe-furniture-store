@@ -51,12 +51,11 @@
             v-for="(product, index) in products"
             :key="product._id"
           >
-            <!-- ID -->
+           
             <td class="product-index">
               {{ index + 1 }}
             </td>
 
-            <!-- Product -->
             <td>
               <div class="product-cell">
                 <div>
@@ -71,21 +70,21 @@
               </div>
             </td>
 
-            <!-- Price -->
+           
             <td>
               <span class="product-price">
                 ฿{{ product.product_price }}
               </span>
             </td>
 
-            <!-- Stock -->
+          
             <td>
               <span class="product-stock">
                 {{ product.product_stock }}
               </span>
             </td>
 
-            <!-- Action -->
+           
             <td class="text-right">
               <v-btn
                 icon
@@ -114,7 +113,6 @@
             </td>
           </tr>
 
-          <!-- Empty -->
           <tr v-if="!products.length">
             <td
               colspan="5    "
@@ -126,7 +124,7 @@
         </tbody>
       </v-simple-table>
 
-      <!-- Loading -->
+     
       <div
         v-if="loading"
         class="loading-state"
@@ -139,7 +137,6 @@
       </div>
     </v-card>
 
-    <!-- Delete Dialog -->
     <v-dialog
       v-model="deleteDialog"
       max-width="360"
@@ -188,6 +185,7 @@
 
 <script>
 import ProductFormDialog from '@/components/admin/ProductFormDialog.vue'
+import eventBus from '@/utils/eventBus'
 
 export default {
   name: 'AdminProducts',
@@ -250,7 +248,7 @@ export default {
       try {
         const token = localStorage.getItem('token')
 
-        await this.axios.delete(
+        const response = await this.axios.delete(
           `http://127.0.0.1:3000/api/v1/products/${this.productToDelete._id}`,
           {
             headers: {
@@ -262,8 +260,12 @@ export default {
         this.products = this.products.filter(
           product => product._id !== this.productToDelete._id
         )
+        eventBus.$emit('show-alert', { type: 'success', message: response.data.message })
       } catch (error) {
-        console.log(error)
+        eventBus.$emit('show-alert', { 
+            type: 'error', 
+            message: error.response?.data?.message || 'Something went wrong' 
+          })
       } finally {
         this.deleting = false
         this.deleteDialog = false
@@ -373,19 +375,16 @@ export default {
   font-size: 13px;
 }
 
-/* Price */
 .product-price {
   font-size: 14px;
   font-weight: 600;
   color: #222;
 }
 
-/* Action */
 .action-btn {
   margin-left: 4px;
 }
 
-/* Empty */
 .empty-state {
   text-align: center;
   color: #999;
@@ -393,14 +392,12 @@ export default {
   font-size: 14px;
 }
 
-/* Loading */
 .loading-state {
   display: flex;
   justify-content: center;
   padding: 48px 0;
 }
 
-/* Dialog */
 .dialog-title {
   font-size: 16px;
   font-weight: 700;
