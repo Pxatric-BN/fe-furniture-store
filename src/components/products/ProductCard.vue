@@ -8,51 +8,91 @@
         class="d-flex"
       >
         <v-card
-          flat
           class="product-card"
+          outlined
         >
-          <img
-            class="product-image"
-            :src="product.product_image"
-            :alt="product.product_name"
-          />
+          <v-list-item three-line>
+            <v-list-item-content>
+              <div class="text-overline mb-2">
+                FURNITURE
+              </div>
 
-          <v-card-text class="product-body">
-            <div class="product-name">
-              {{ product.product_name }}
-            </div>
+              <v-list-item-title class="product-name mb-2">
+                {{ product.product_name }}
+              </v-list-item-title>
 
-            <div class="product-description">
-              {{ product.product_description }}
-            </div>
+              <v-list-item-subtitle class="product-description">
+                {{ product.product_description }}
+              </v-list-item-subtitle>
 
-            <div class="product-price">
-              ฿{{ product.product_price }}
-            </div>
-            <div class="cardAction">
-            <AddProductButton
-              class="add-to-cart-btn"
-              @click="addToCart(product)"
-            />
-            </div>
-          </v-card-text>
+              <div class="product-price">
+                ฿{{ product.product_price }}
+              </div>
+            </v-list-item-content>
+
+            <v-list-item-avatar
+              tile
+              size="100"
+              class="product-avatar"
+            >
+              <img
+                :src="product.product_image"
+                :alt="product.product_name"
+              >
+            </v-list-item-avatar>
+          </v-list-item>
+
+          <v-card-actions>
+            <v-btn
+              outlined
+              rounded
+              text
+              class="detail-btn"
+              @click="openProductDetail(product._id)"
+            >
+              MORE DETAIL
+
+              <v-icon
+                right
+                size="18"
+              >
+                mdi-arrow-right
+              </v-icon>
+            </v-btn>
+
+            <v-spacer />
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- Product Detail -->
+    <ProductDetailDialog
+      :product-id="selectedProductId"
+      :value="detailDialog"
+      @input="detailDialog = $event"
+      @add-to-order="handleAddToOrder"
+    />
   </div>
 </template>
 
 <script>
-import AddProductButton from './AddProductButton.vue'
+
+import ProductDetailDialog from './ProductDetailDialog.vue'
 
 export default {
   name: 'ProductCard',
-    components: {
-        AddProductButton
-    },
+
+  components: {
+    
+    ProductDetailDialog
+  },
+
   data () {
     return {
-      products: []
+      products: [],
+      detailDialog: false,
+      selectedProductId: null
     }
   },
 
@@ -63,15 +103,28 @@ export default {
   methods: {
     async getProducts () {
       try {
-        const response = await this.axios.get('http://127.0.0.1:3000/api/v1/products')
+        const response = await this.axios.get(
+          'http://127.0.0.1:3000/api/v1/products'
+        )
+
         this.products = response.data.data
       } catch (error) {
         console.error('Get products failed:', error)
       }
     },
 
+    openProductDetail (id) {
+      this.selectedProductId = id
+      this.detailDialog = true
+    },
+
     addToCart (product) {
       this.$emit('add-to-cart', product)
+    },
+
+    handleAddToOrder (data) {
+      console.log('Product:', data.product)
+      console.log('Quantity:', data.quantity)
     }
   }
 }
@@ -79,47 +132,40 @@ export default {
 
 <style scoped>
 .product-card {
+  width: 100%;
   border-radius: 18px;
   overflow: hidden;
-  border: 1px solid #e5e5e5;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 5px;
+  transition: 0.25s ease;
 }
 
-.product-image {
+.product-card:hover {
+  transform: translateY(-3px);
+}
+
+.product-avatar {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.product-avatar img {
   width: 100%;
-  height: 220px;
+  height: 100%;
   object-fit: cover;
-  display: block;
-  flex-shrink: 0;
-}
-
-.product-body {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
 }
 
 .product-name {
   font-size: 18px;
   font-weight: 700;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .product-description {
-  margin-top: 6px;
-  color: #777;
-  font-size: 14px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 40px;
+
+  line-height: 1.5;
+  max-width: 220px;
 }
 
 .product-price {
@@ -127,7 +173,15 @@ export default {
   font-size: 18px;
   font-weight: 700;
 }
-.cardAction {
-  margin-top: 5px;
+
+.v-card-actions {
+  padding: 12px 16px 16px;
+}
+
+.detail-btn {
+  text-transform: none;
+  font-weight: 600;
+  border-color: #000 !important;
+  color: #000 !important;
 }
 </style>
