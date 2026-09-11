@@ -1,17 +1,31 @@
 <template>
-  <div>
-    <h1>
-        This is Product View
-    </h1>
-  </div>
+  <v-container fluid>
+    <v-row>
+     
+      <v-col cols="3" class="d-flex justify-center"> 
+        <ProductSideBar />
+      </v-col>
+
+    
+      <v-col cols="9" class="d-flex justify-center">
+        <ProductCard />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-export default {
+import ProductCard from '@/components/products/ProductCard.vue'
+import ProductSideBar from '@/components/products/ProductSideBar.vue'
 
+export default {
+  components: {
+    ProductCard,
+    ProductSideBar
+  }
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
