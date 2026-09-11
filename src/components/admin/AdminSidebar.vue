@@ -61,20 +61,55 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item
-          to="/admin/orders"
-          class="nav-item"
-        >
-          <v-list-item-icon>
-            <v-icon>mdi-cart-outline</v-icon>
-          </v-list-item-icon>
+    <v-list-group
+     
+      prepend-icon="mdi-cart-outline"
+      no-action
+      class="nav-item"
+    >
+      <template v-slot:activator>
+        <v-list-item-content>
+          <v-list-item-title>Orders</v-list-item-title>
+        </v-list-item-content>
+      </template>
 
-          <v-list-item-content>
-            <v-list-item-title>Orders</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+      <v-list-item
+        to="/admin/orders"
+        exact
+        class="sub-nav-item"
+      >
+        <v-list-item-icon>
+          <v-icon small>
+            mdi-format-list-bulleted
+          </v-icon>
+        </v-list-item-icon>
 
-        <v-list-item
+        <v-list-item-content>
+          <v-list-item-title>
+            All Orders
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item
+        to="/admin/orders/products-by-order"
+        class="sub-nav-item"
+      >
+        <v-list-item-icon>
+          <v-icon small>
+            mdi-package-variant
+          </v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>
+            Orders by products
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list-group>
+
+    <v-list-item
           to="/admin/users"
           class="nav-item"
         >
@@ -245,4 +280,51 @@ export default {
   text-transform: none;
   letter-spacing: normal;
 }
+.sub-nav-item {
+  margin: 2px 12px 2px 32px;
+  border-radius: 10px;
+  min-height: 42px;
+  color: #555;
+}
+
+.sub-nav-item :deep(.v-list-item__icon) {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 12px;
+}
+
+.sub-nav-item :deep(.v-icon) {
+  color: #999;
+  font-size: 18px;
+}
+
+.sub-nav-item :deep(.v-list-item__title) {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+
+.sub-nav-item::before {
+  border-radius: 10px;
+}
+
+.sub-nav-item.v-list-item--active {
+  background-color: #111 !important;
+  color: #fff !important;
+}
+
+.sub-nav-item.v-list-item--active :deep(.v-icon) {
+  color: #fff !important;
+}
+
+.sub-nav-item.v-list-item--active :deep(.v-list-item__title) {
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.sub-nav-item.v-list-item--active::before {
+  opacity: 0 !important;
+}
+
+
 </style>
