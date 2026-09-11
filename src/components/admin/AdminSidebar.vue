@@ -364,31 +364,16 @@ export default {
   font-weight: 500;
 }
 
-/* Group hover */
-
 .nav-group :deep(.v-list-item:hover) {
   background: #f7f7f7;
 }
 
-/* =========================
-   Sub Navigation
-========================= */
-
 .sub-nav-item {
   min-height: 40px;
-
-  margin: 2px 0 2px 20px;
-
   border-radius: 9px;
-
   color: #666666;
 }
 
-.sub-nav-item :deep(.v-list-item__icon) {
-  margin-top: 9px;
-  margin-bottom: 9px;
-  margin-right: 10px;
-}
 
 .sub-nav-item :deep(.v-icon) {
   color: #aaaaaa;

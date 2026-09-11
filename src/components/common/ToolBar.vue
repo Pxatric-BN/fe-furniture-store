@@ -46,9 +46,10 @@
       <v-btn
         icon
         class="toolbar-icon"
+        @click="logout"
       >
         <v-icon>
-          mdi-account-outline
+          mdi-logout
         </v-icon>
       </v-btn>
     </div>
@@ -62,7 +63,15 @@ export default {
     return { 
         search: '' 
         } 
-    } 
+    },
+  methods: {
+    logout() {
+      localStorage.removeItem('token')
+      localStorage.removeItem('role')
+      localStorage.removeItem('currentOrder')
+      this.$router.push('/login')
+    }
+  }  
 }
 
 </script>

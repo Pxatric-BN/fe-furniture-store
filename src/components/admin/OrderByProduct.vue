@@ -1,5 +1,9 @@
 <template>
   <div class="admin-orders">
+    <div>
+        <h1>Order By Product</h1>
+        <p>See all Order by product here</p>
+      </div>
     <v-row>
 
       <v-col
