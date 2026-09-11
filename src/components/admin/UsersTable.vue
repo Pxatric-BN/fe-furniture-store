@@ -141,6 +141,7 @@ export default {
         this.loading = false
       }
     },
+
     async approveUser (user) {
       try {
         const token = localStorage.getItem('token')
@@ -160,7 +161,7 @@ export default {
           message: response.data.message
         })
 
-        // Update UI immediately
+        
         user.isApprove = true
       } catch (error) {
         eventBus.$emit('show-alert', {
