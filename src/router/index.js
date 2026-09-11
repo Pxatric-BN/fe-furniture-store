@@ -32,15 +32,6 @@ const routes = [
     component: () => import('../views/auth/RegisterView.vue')
   },
       {
-        path: '/admin',
-        name: 'admin',
-        component: () => import('../views/admin/AdminView.vue'),
-        meta: {
-          requiresAuth: true,
-          requiresAdmin: true
-        }
-      },
-      {
         path: '/orders',
         name: 'orders',
         component: () => import('../views/orders/OrdersView.vue'),
@@ -55,7 +46,34 @@ const routes = [
         meta: {
           requiresAuth: true
         }
+      },
+      {
+        path: '/admin',
+        name: 'admin',
+        component: () => import('../views/admin/AdminDashboard.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true
+        },
+        children: [
+            {
+              path: 'products',
+              name: 'admin-products',
+              component: () => import('../views/admin/AdminProducts.vue')
+            },
+            {
+              path: 'orders',
+              name: 'admin-orders',
+              component: () => import('../views/admin/AdminOrders.vue')
+            },
+            {
+              path: 'users',
+              name: 'admin-users',
+              component: () => import('../views/admin/AdminUsers.vue')
+            }
+          ]
       }
+      
 ]
 
 const router = new VueRouter({

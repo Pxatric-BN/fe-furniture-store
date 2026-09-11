@@ -25,7 +25,7 @@ export default {
 
   computed: {
     showToolbar() {
-      return !['login', 'register'].includes(this.$route.name)
+      return !['login', 'register', 'admin','admin-dashboard','admin-orders','admin-users','admin-products'].includes(this.$route.name)
     }
   }
 }
