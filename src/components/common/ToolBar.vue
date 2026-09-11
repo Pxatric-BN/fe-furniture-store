@@ -6,7 +6,7 @@
     class="toolbar"
   >
     <img
-      src="@/assets/Logo.png"
+      src="@/assets/logo.png"
       alt="Furniture Store"
       class="logo"
     />
